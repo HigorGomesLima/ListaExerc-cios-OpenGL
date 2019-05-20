@@ -30,6 +30,11 @@ void objeto(void){
         glVertex2f(2,-0.5);
     glEnd();
 }
+/*
+Fórmula 3D - X e Y
+x = -1.5 + y*0,5 + i*0,5;
+y = y*0,25 - x*0,25;
+*/
 static void display(void)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
