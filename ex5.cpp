@@ -9,29 +9,6 @@
 
 int mesa[4][4];
 
-void objeto(void){
-    glBegin(GL_POLYGON);
-        glColor3f(0,0,1);
-        glVertex2f(0,1);
-        glVertex2f(2,0);
-        glVertex2f(0,-1);
-        glVertex2f(-2,0);
-    glEnd();
-    glBegin(GL_POLYGON);
-        glColor3f(0.5,0.5,1);
-        glVertex2f(0,-1);
-        glVertex2f(-2,0);
-        glVertex2f(-2,-0.5);
-        glVertex2f(0,-1.5);
-    glEnd();
-    glBegin(GL_POLYGON);
-        glColor3f(0.5,0.5,1);
-        glVertex2f(2,0);
-        glVertex2f(0,-1);
-        glVertex2f(0,-1.5);
-        glVertex2f(2,-0.5);
-    glEnd();
-}
 void placa(float x,float y,float w,float h,float r,float g,float b){
     glBegin(GL_POLYGON);
         glColor3f(r,g,b);
