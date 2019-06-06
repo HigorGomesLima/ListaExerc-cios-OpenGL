@@ -56,6 +56,16 @@ static void display(void)
                 }
         }
     }
+    char texto[100] = "Higor Gomes, Leonardo Rodrigues";
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glRasterPos2f(-40,5);
+    glTranslatef(-10, -10, 1);
+    glScalef(0.05,0.05,0.05);
+    glColor3f(1,0,1);
+    for(p=texto; *p; p++)
+        glutStrokeCharacter(GLUT_STROKE_ROMAN, *p);
+    glPopMatrix();
     glutSwapBuffers();
 }
 
