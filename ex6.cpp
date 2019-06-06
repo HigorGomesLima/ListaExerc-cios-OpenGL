@@ -46,7 +46,6 @@ void placa(float x,float y,float w,float h,float r,float g,float b){
 static void display(void)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    chao();
     for(int i = 0;i < 4;i++){
         for(int j=3;j >= 0;j--){
                 if(mesa[i][j] > 0){
@@ -57,12 +56,13 @@ static void display(void)
         }
     }
     char texto[100] = "Higor Gomes, Leonardo Rodrigues";
+    char p*;
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
     glRasterPos2f(-40,5);
     glTranslatef(-10, -10, 1);
-    glScalef(0.05,0.05,0.05);
-    glColor3f(1,0,1);
+    glScalef(0.02,0.02,0.02);
+    glColor3f(0,0,0);
     for(p=texto; *p; p++)
         glutStrokeCharacter(GLUT_STROKE_ROMAN, *p);
     glPopMatrix();
