@@ -1,5 +1,5 @@
 #include <windows.h>
-#ifdef __APPLE__
+#ifdef _APPLE_
 #include <GLUT/glut.h>
 #else
 #include <GL/glut.h>
@@ -8,10 +8,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int mesa[6][6];
-float altura = 2;
-bool vitoria = false;
+int mesa[6][6]; //tamanho da mesa
+float altura = 2; //altura da peça
+bool vitoria = false; //verificação da vitória
 float t = 4;
+int click = 0;
 
 /*bloco e valores e direcao
     horizontal = 1
@@ -26,32 +27,37 @@ float t = 4;
     ------------------------
 */
 int getPosition(int x,int y);
-void mover(int x,int y,int b);
+bool mover(int x,int y,int b);
 void placa(float x,float y,float w,float h,float r,float g,float b);
 
 void mouse(int button, int state, int x, int y){
+    if(!vitoria){
     switch(button){
     case GLUT_LEFT_BUTTON:
         if(state == GLUT_DOWN){
-            if(getPosition(x,y) >= 0){
-                mover(x,y,1);
+            if(getPosition(x,y) > 0){
+                if(mover(x,y,1))
+                    click++;
             }
         }
         glutPostRedisplay();
         break;
         case GLUT_RIGHT_BUTTON:
         if(state == GLUT_DOWN){
-            if(getPosition(x,y) >= 0){
-                mover(x,y,2);
+            if(getPosition(x,y) > 0){
+                if(mover(x,y,2))
+                    click++;
             }
         }
         glutPostRedisplay();
         break;
     }
+    }
 
 }
 
-void mover(int x,int y,int b){
+bool mover(int x,int y,int b){
+    bool r = false;
     int xr = getPosition(x,y) / 10;
     int yr = getPosition(x,y) % 10;
     int peca = mesa[xr][yr] / 10;
@@ -69,6 +75,7 @@ void mover(int x,int y,int b){
                     fj = j;
                 }
                 mesa[xr][fj-1] = 0;
+                r = true;
             }
     }else if(d == 2){
             int px = xr;
@@ -82,6 +89,7 @@ void mover(int x,int y,int b){
                     fj = j;
                 }
                 mesa[fj-1][yr] = 0;
+                r = true;
         }
         }
     }else if(b == 2){
@@ -97,6 +105,7 @@ void mover(int x,int y,int b){
                     fj = j;
                 }
                 mesa[xr][fj+1] = 0;
+                r = true;
             }
     }else if(d == 2){
             int px = xr;
@@ -110,6 +119,7 @@ void mover(int x,int y,int b){
                     fj = j;
                 }
                 mesa[fj+1][yr] = 0;
+                r = true;
             }
         }
     }
@@ -118,11 +128,13 @@ void mover(int x,int y,int b){
             int py = yr;
             for(int i = xr;py < 5 && (mesa[i][py+1] / 10) == peca;py++);
             if(py == 5){
+                r = true;
                 vitoria = true;
             }
         }
     }
     glutPostRedisplay();
+    return r;
 }
 
 void telavitoria(){
@@ -139,6 +151,21 @@ void telavitoria(){
         glVertex2f(38,-2);
         glVertex2f(14,-14);
     glEnd();
+    char completo[30];
+    itoa(click,completo,10);
+    char texto[100] = "voce clicou ";
+    strcat(texto,completo);
+    char* p;
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glRasterPos2f(-40,5);
+    glTranslatef(-10, -10, 1);
+    glScalef(0.05,0.05,0.05);
+    glColor3f(1,0,1);
+    for(p=texto; *p; p++)
+        glutStrokeCharacter(GLUT_STROKE_ROMAN, *p);
+    glPopMatrix();
+    glutPostRedisplay();
 }
 
 void addobstaculos(int valor,int x,int y,int tamanho,int direcao){
@@ -271,84 +298,19 @@ void chao(){
         glVertex2f(14,-14);
     glEnd();
 
-    glBegin(GL_LINE_LOOP);
-        glColor3f(1,1,1);
-        glVertex2f(-6,-4);
-        glVertex2f(18,8);
-    glEnd();
+    for(int i = 0;i < 7;i++){
+        glBegin(GL_LINE_LOOP);
+            glColor3f(1,1,1);
+            glVertex2f((-6+i*4),(-4-i*2));
+            glVertex2f((18+i*4),(8-i*2));
+        glEnd();
 
-    glBegin(GL_LINE_LOOP);
-        glColor3f(1,1,1);
-        glVertex2f(-2,-6);
-        glVertex2f(22,6);
-    glEnd();
-
-    glBegin(GL_LINE_LOOP);
-        glColor3f(1,1,1);
-        glVertex2f(2,-8);
-        glVertex2f(26,4);
-    glEnd();
-
-    glBegin(GL_LINE_LOOP);
-        glColor3f(1,1,1);
-        glVertex2f(6,-10);
-        glVertex2f(30,2);
-    glEnd();
-
-    glBegin(GL_LINE_LOOP);
-        glColor3f(1,1,1);
-        glVertex2f(10,-12);
-        glVertex2f(34,0);
-    glEnd();
-
-    glBegin(GL_LINE_LOOP);
-        glColor3f(1,1,1);
-        glVertex2f(14,-14);
-        glVertex2f(38,-2);
-    glEnd();
-
-    glBegin(GL_LINE_LOOP);
-        glColor3f(1,1,1);
-        glVertex2f(14,-14);
-        glVertex2f(38,-2);
-    glEnd();
-
-    glBegin(GL_LINE_LOOP);
-        glColor3f(1,1,1);
-        glVertex2f(-6,-0);
-        glVertex2f(18,-12);
-    glEnd();
-
-    glBegin(GL_LINE_LOOP);
-        glColor3f(1,1,1);
-        glVertex2f(-2,2);
-        glVertex2f(22,-10);
-    glEnd();
-
-    glBegin(GL_LINE_LOOP);
-        glColor3f(1,1,1);
-        glVertex2f(2,4);
-        glVertex2f(26,-8);
-    glEnd();
-
-    glBegin(GL_LINE_LOOP);
-        glColor3f(1,1,1);
-        glVertex2f(6,6);
-        glVertex2f(30,-6);
-    glEnd();
-
-    glBegin(GL_LINE_LOOP);
-        glColor3f(1,1,1);
-        glVertex2f(10,8);
-        glVertex2f(34,-4);
-    glEnd();
-
-    glBegin(GL_LINE_LOOP);
-        glColor3f(1,1,1);
-        glVertex2f(14,10);
-        glVertex2f(38,-2);
-    glEnd();
-
+        glBegin(GL_LINE_LOOP);
+            glColor3f(1,1,1);
+            glVertex2f((-6+i*4),(0+i*2));
+            glVertex2f((18+i*4),(-12+i*2));
+        glEnd();
+    }
 }
 static void display(void)
 {
@@ -364,16 +326,28 @@ static void display(void)
                     int ca = mesa[i][j] / 10;
                     switch(ca){
                     case 1:
-                        cor = {1,0,0};
+                        //cor = {1,0,0};
+                        cor[0] = 1;
+                        cor[1] = 0;
+                        cor[2] = 0;
                         break;
                     case 2:
-                        cor = {0,0,1};
+                        //cor = {0,0,1};
+                        cor[0] = 0;
+                        cor[1] = 0;
+                        cor[2] = 1;
                         break;
                     case 3:
-                        cor = {0,1,0};
+                        //cor = {0,1,0};
+                        cor[0] = 0;
+                        cor[1] = 1;
+                        cor[2] = 0;
                         break;
                     case 4:
-                        cor = {1,1,0};
+                        //cor = {1,1,0};
+                        cor[0] = 1;
+                        cor[1] = 1;
+                        cor[2] = 0;
                         break;
                     }
                     float x = -(t*1.5) + j*t + i*t;
@@ -388,6 +362,14 @@ static void display(void)
 
 int main(int argc, char *argv[])
 {
+    int l = 1;
+    std::cout<<"Escolha um layout. 1, 2 ou 3.";
+    std::cin >> l;
+    while(l<1||l>3)
+    {
+        std::cout<<"Escolha um layout. 1, 2 ou 3.";
+        std::cin >> l;
+    }
     glutInit(&argc, argv);
     glutInitWindowSize(640,480);
     glutInitWindowPosition(0,0);
@@ -396,6 +378,7 @@ int main(int argc, char *argv[])
         for(int j=0;j < 6;j++)
                 mesa[i][j] = 0;
     }
+    if(l == 1){
     addobstaculos(11,2,1,2,1);
     addobstaculos(22,1,3,3,2);
     addobstaculos(22,3,0,3,2);
@@ -403,6 +386,24 @@ int main(int argc, char *argv[])
     addobstaculos(31,4,1,3,1);
     addobstaculos(41,0,0,2,1);
     addobstaculos(41,5,3,2,1);
+    }else if(l == 2){
+        addobstaculos(11,2,0,2,1);
+        addobstaculos(22,0,1,2,2);
+        addobstaculos(22,0,4,3,2);
+        addobstaculos(22,4,3,2,2);
+        addobstaculos(31,3,0,3,1);
+        addobstaculos(31,5,4,2,1);
+        addobstaculos(41,4,4,2,1);
+    }
+    else if(l == 3){
+        addobstaculos(11,2,2,2,1);
+        addobstaculos(22,1,4,3,2);
+        addobstaculos(22,2,1,3,2);
+        addobstaculos(31,0,3,3,1);
+        addobstaculos(31,4,2,3,1);
+        addobstaculos(41,1,1,2,1);
+        addobstaculos(41,5,0,4,1);
+    }
     glutCreateWindow("Lista CG");
     glutDisplayFunc(display);
     glutMouseFunc(mouse);
