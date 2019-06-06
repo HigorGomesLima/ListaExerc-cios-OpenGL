@@ -46,7 +46,6 @@ void placa(float x,float y,float w,float h,float r,float g,float b){
 static void display(void)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    chao();
     for(int i = 0;i < 4;i++){
         for(int j=3;j >= 0;j--){
                 if(mesa[i][j] > 0){
